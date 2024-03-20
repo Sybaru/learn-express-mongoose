@@ -7,8 +7,11 @@ get_author_list = async () => {
   });
 };
 
-exports.show_all_authors = function(res) {
-  get_author_list()
-    .then((data) => res.send(data))
-    .catch((_) => res.send('No authors found'));
-}
+exports.show_all_authors = async (res) => {
+  try {
+    const authors = await Author.find({}, { firstName: 1, familyName: 1 });
+    res.json(authors);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch authors' });
+  }
+};
